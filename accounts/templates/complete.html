@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body%}
+<div class="login_page_bg">
+    <div class="container">
+        <div class="customer_login">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="account_form login">
+                        <p>
+                            تغییر پسورد شما با موفقیت انجام شد.
+                        </p>
+                        <a href="{% url 'accounts:login' %}">
+                            <button type="submit">ورود</button>
+                        </a>                   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

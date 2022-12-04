@@ -1,0 +1,421 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block body %}
+
+   <!--breadcrumbs area start-->
+   <div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <ul>
+                        <li><a href="{% url 'home:home' %}">خانه</a></li>
+                        <li>جزئیات محصول</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->
+
+<div class="product_page_bg">
+    <div class="container">
+        <div class="product_details_wrapper mb-55">
+            <!--product details start-->
+            <div class="product_details">
+                <div class="row">
+                    <div class="col-lg-5 col-md-6">
+                        <div class="product-details-tab">
+                            <div id="img-1" class="zoomWrapper single-zoom">
+                                <a href="#">
+                                    <img id="zoom1" src="{{product.image_url}}" data-zoom-image="{{product.image_url}}" alt="big-1">
+                                </a>
+                            </div>
+                            <div class="single-zoom-thumb">
+                                <ul class="s-tab-zoom owl-carousel single-product-active" id="gallery_01">
+                                    {% for i in images %}
+                                    <li>
+                                        <a href="#" class="elevatezoom-gallery {% if forloop.first %} active {% endif %}" data-update="" data-image="{{i.image_url}}" data-zoom-image="{{i.image_url}}">
+                                            <img src="{{i.image_url}}" alt="zo-th-1">
+                                        </a>
+
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-6">
+                        <div class="product_d_right">
+
+                                <h3><a href="#">{{product.name}}</a></h3>
+                                <div class="product_rating">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-star{% if product.average < 5 %}-o  {% endif %}"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star{% if product.average < 4 %}-o  {% endif %}"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star{% if product.average < 3 %}-o  {% endif %}"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star{% if product.average < 2 %}-o  {% endif %}"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star{% if product.average < 1 %}-o  {% endif %}"></i></a></li>
+                                        <li class="review"><a href="#">( {{product.total_comment|default_if_none:'0'}} نقد و بررسی )</a></li>
+                                    </ul>
+                                </div>
+                                <div class="price_box">
+                                    {% if product.status != 'None' %}
+                                    {% if variants.discount %}
+                                    <span class="old_price">{{variants.unit_price | intcomma}} تومان</span>
+                                    {% endif %}
+                                    <span class="current_price">{{variants.total_price | intcomma}} تومان</span>
+                                    {% else %}
+                                    {% if product.discount %}
+                                    <span class="old_price">{{product.unit_price | intcomma}} تومان</span>
+                                    {% endif %}
+                                    <span class="current_price">{{product.total_price | intcomma}} تومان</span>
+                                    {% endif %}
+                                </div>
+                                <div class="product_desc">
+                                    <p>{{product.information | safe}}</p>
+                                </div>
+                                {% if product.status == 'Both' %}
+                                <div class="product_variant color">
+                                    <h3>گزینه های در دسترس</h3>
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <ul>
+                                            <label>سایز :</label>
+                                                {% for data in size %}
+                                                <input type="radio" name="select" value="{{data.id}}" {% if variants.id == data.id %}checked{% endif %} >
+                                                <li class=""><a href="#">{{data.size_variant}}</a></li>
+                                                {% endfor %}                                        
+                                        </ul>
+                                    </form>
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <ul>
+                                            <label> رنگ :</label>                                          
+                                                {% for data in colors %}
+                                                <input type="radio" name="select" value="{{data.id}}" {% if variants.id == data.id %}checked{% endif %} >
+                                                <li class=""><a href="#">{{data.color_variant}}</a></li>
+                                                {% endfor %}                                       
+                                        </ul>
+                                    </form>
+                                    
+                                </div>
+
+                                {% elif product.status == 'Size' %}
+                                <div class="product_variant color">
+                                    <h3>گزینه های در دسترس</h3>                                    
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <ul>
+                                            <label>سایز :</label>
+                                            {% for data in variant %}                                       
+                                            <input type="radio" name="select" value="{{data.id}}" {% if variants.id == data.id %}checked{% endif %} >
+                                            <li class=""><a href="#">{{data.size_variant}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </form>                                       
+                                </div>
+
+                                {% elif product.status == 'Color' %}
+                                <div class="product_variant color">
+                                    <h3>گزینه های در دسترس</h3>                                   
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <ul>
+                                            <label>رنگ :</label>
+                                            {% for data in variant %}
+                                            <input type="radio" name="select" value="{{data.id}}" {% if variants.id == data.id %}checked{% endif %} >
+                                            <li class=""><a href="">{{data.color_variant}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </form>
+                                </div>
+                                {% endif %}
+
+                                <div class="product_variant quantity">
+                                <label>تعداد</label>
+                                {% if product.status != 'None' %}
+                                    <form action="{% url 'cart:add_cart' product.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="select" value="{{variants.id}}">
+                                        <input type="number" name="quantity" min="1" max="{{variants.amount}}" value="1">
+                                        <button class="button" type="submit">افزودن به سبد</button>
+                                    </form>
+                                {% else %}
+                                    <form action="{% url 'cart:add_cart' product.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="" value="{{product.id}}">
+                                        <input type="number" name="quantity" min="1" max="{{product.amount}}" value="1">
+                                        <button class="button" type="submit">افزودن به سبد</button>
+                                    </form>
+                                {% endif %}
+                                </div>
+
+                                <div class=" product_d_action">
+                                    <ul>
+                                        <li><a href="{% url 'home:favourite' product.id %}" title="افزودن به علاقه‌مندی‌ها">+ افزودن به علاقه‌مندی‌ها</a></li>
+                                        <!-- <li><a href="#" title="افزودن به علاقه‌مندی‌ها">+ مقایسه</a></li> -->
+                                    </ul>
+                                </div>
+                                <!-- <div class="product_meta">
+                                    <span>دسته: <a href="#">{{product.category.name}}</a></span>
+                                </div> -->
+
+                            <div class="priduct_social">
+                                <ul>
+                                    <li><a class="facebook" href="#" title="facebook"><i class="fa fa-facebook"></i> لایک</a></li>
+                                    <li><a class="twitter" href="#" title="twitter"><i class="fa fa-twitter"></i> توییت</a></li>
+                                    <li><a class="pinterest" href="#" title="pinterest"><i class="fa fa-pinterest"></i> ذخیره</a></li>
+                                    <li><a class="google-plus" href="#" title="google +"><i class="fa fa-google-plus"></i> اشتراک گذاری</a></li>
+                                    <li><a class="linkedin" href="#" title="linkedin"><i class="fa fa-linkedin"></i> لینکدین</a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--product details end-->
+
+            <!--product info start-->
+            <div class="product_d_info">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="product_d_inner">
+                            <div class="product_info_button">
+                                <ul class="nav" role="tablist">
+                                    <li>
+                                        <a class="active" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false">توضیحات</a>
+                                    </li>
+                                    <li>
+                                        <a data-toggle="tab" href="#sheet" role="tab" aria-controls="sheet" aria-selected="false">مشخصات فنی</a>
+                                    </li>
+                                    <li>
+                                        <a data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">نقد و برررسی ({{product.total_comment|default_if_none:'0'}})</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="info" role="tabpanel">
+                                    <div class="product_info_content">
+                                        <p>{{product.information | safe}}</p>
+
+                                    </div>
+                                </div>
+                                <!-- <div class="tab-pane fade" id="sheet" role="tabpanel">
+                                    <div class="product_d_table">
+                                        <form action="#">
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="first_child">جنس</td>
+                                                        <td>پلی استر</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="first_child">سبک ها</td>
+                                                        <td>دخترانه</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="first_child">خصوصیات</td>
+                                                        <td>پیراهن کوتاه</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </form>
+                                    </div>
+                                    <div class="product_info_content">
+                                        <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و</p>
+                                    </div>
+                                </div> -->
+
+                                <div class="tab-pane fade" id="reviews" role="tabpanel">
+                                    <div class="reviews_wrapper">
+                                        <h2>{{product.total_comment|default_if_none:'0'}} نقد و بررسی برای این محصول</h2>
+                                        {% for com in comments %}
+                                        <div class="reviews_comment_box">
+                                            <div class="comment_thmb">
+                                                <img src="../media/blog/comment2.jpg" alt="">
+                                            </div>
+                                            <div class="comment_text">
+                                                <div class="reviews_meta">
+                                                    <div class="product_rating">
+                                                        <ul>
+                                                            <li><a href="#"><i class="fa fa-star{% if com.rate < 5 %}-o  {% endif %}"></i></a></li>
+                                                            <li><a href="#"><i class="fa fa-star{% if com.rate < 4 %}-o  {% endif %}"></i></a></li>
+                                                            <li><a href="#"><i class="fa fa-star{% if com.rate < 3 %}-o  {% endif %}"></i></a></li>
+                                                            <li><a href="#"><i class="fa fa-star{% if com.rate < 2 %}-o  {% endif %}"></i></a></li>
+                                                            <li><a href="#"><i class="fa fa-star{% if com.rate < 1 %}-o  {% endif %}"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <p><strong>{{com.user}} </strong>-{{com.create}}</p>
+                                                </div>
+                                                <p>{{com.comment}}</p>
+                                            </div>
+
+                                        </div>
+                                        {% endfor %}
+                                        <div class="comment_title">
+                                            <h2>یک نقد و بررسی بنویسید </h2>
+                                            <!-- <p>ایمیل شما منتشر نخواهد شد. فیلد های الزامی مشخص شده اند</p> -->
+                                        </div>
+                                        <form action="{% url 'home:product_comment' product.id %}" method="post">
+                                            {% csrf_token %}
+                                            <div class="product_rating mb-10">
+                                                <h3>امتیاز شما</h3>
+                                                <ul>
+                                                    <li><a href="#"><input type="radio" name="rate" value="5" >{{5}}</a></li>
+                                                    <li><a href="#"><input type="radio" name="rate" value="4" >{{4}}</a></li>
+                                                    <li><a href="#"><input type="radio" name="rate" value="3" >{{3}}</a></li>
+                                                    <li><a href="#"><input type="radio" name="rate" value="2" >{{2}}</a></li>
+                                                    <li><a href="#"><input type="radio" name="rate" value="1" >{{1}}</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="product_review_form">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <label for="review_comment">نقد و بررسی شما </label>
+                                                        <textarea name="comment" id="review_comment"></textarea>
+                                                    </div>
+                                                    <!-- <div class="col-lg-6 col-md-6">
+                                                        <label for="author">نام</label>
+                                                        <input id="author" type="text">
+
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <label for="email">ایمیل </label>
+                                                        <input id="email" type="email" dir="ltr">
+                                                    </div> -->
+                                                </div>
+                                                <button type="submit">ثبت</button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--product info end-->
+        </div>
+
+        <!--product area start-->
+        <section class="product_area related_products">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section_title">
+                        <h2>محصولات مرتبط </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="product_carousel product_style product_column5 owl-carousel">
+                {% for s in similar %}
+                    <article class="single_product">
+                        <figure>
+
+                            <div class="product_thumb">
+                                <a class="primary_img" href="{% url 'home:detail' s.id %}"><img style="width:150px;height:150px;" src="{{s.image_url}}" alt=""></a>
+                                <a class="secondary_img" href="product-details.html"><img src="assets/img/product/product13.jpg" alt=""></a>
+                                {% if s.discount %}
+                                    <div class="label_product">
+                                        <span class="label_sale">%{{s.discount}}</span>
+                                    </div>
+                                {% endif %}
+                                <div class="action_links">
+                                    <ul>
+                                        <li class="wishlist"><a href="{% url 'home:favourite' s.id %}" title="افزودن به علاقه‌مندی‌ها"><i class="ion-android-favorite-outline"></i></a></li>
+                                        <!-- <li class="compare"><a href="#" title="افزودن به مقایسه"><i class="ion-ios-settings-strong"></i></a></li> -->
+                                        <li class="quick_button"><a href="{% url 'home:detail' s.id %}" data-toggle="modal" data-target="#modal_box" title="مشاهده سریع"><i class="ion-ios-search-strong"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="product_content">
+                                <div class="product_content_inner">
+                                    <h4 class="product_name"><a href="{% url 'home:detail' s.id %}">{{s.name}}</a></h4>
+                                    <div class="price_box">
+                                        {% if s.discount %}
+                                        <span class="old_price">{{s.unit_price | intcomma }} تومان</span>
+                                        {% endif %}
+                                        <span class="current_price">{{s.total_price | intcomma }} تومان</span>
+                                    </div>
+                                </div>
+                                <div class="add_to_cart">
+                                    {% if m.status != 'None' %}
+                                        <a href="{% url 'home:detail' s.id %}" title="افزودن به سبد">افزودن به سبد</a>
+                                    {% else %}
+                                        <a href="{% url 'cart:add_cart' s.id %}" title="افزودن به سبد">افزودن به سبد</a>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </figure>
+                    </article>
+                {% endfor %}
+            </div>
+
+        </section>
+        <!--product area end-->
+
+        <!--product area start-->
+        <section class="product_area upsell_products">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section_title">
+                        <h2>محصولات جدید </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="product_carousel product_style product_column5 owl-carousel">
+            {% for c in create %}
+                <article class="single_product">
+                    <figure>
+
+                        <div class="product_thumb">
+                            <a class="primary_img" href="{% url 'home:detail' c.id %}"><img style="width:150px;height:150px;" src="{{c.image_url}}" alt=""></a>
+                            <a class="secondary_img" href="product-details.html"><img src="assets/img/product/product29.jpg" alt=""></a>
+                            {% if c.discount %}
+                            <div class="label_product">
+                                <span class="label_sale">%{{c.discount}}</span>
+                            </div>
+                            {% endif %}
+                            <div class="action_links">
+                                <ul>
+                                    <li class="wishlist"><a href="{% url 'home:favourite' c.id %}" title="افزودن به علاقه‌مندی‌ها"><i class="ion-android-favorite-outline"></i></a></li>
+                                    <!-- <li class="compare"><a href="#" title="افزودن به مقایسه"><i class="ion-ios-settings-strong"></i></a></li> -->
+                                    <li class="quick_button"><a href="{% url 'home:detail' c.id %}" data-toggle="modal" data-target="#modal_box" title="مشاهده سریع"><i class="ion-ios-search-strong"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product_content">
+                            <div class="product_content_inner">
+                                <h4 class="product_name"><a href="{% url 'home:detail' c.id %}">{{c.name}}  </a></h4>
+                                <div class="price_box">
+                                    {% if c.discount %}
+                                    <span class="old_price">{{c.unit_price | intcomma }} تومان</span>
+                                    {% endif %}
+                                    <span class="current_price">{{c.total_price | intcomma }} تومان</span>
+                                </div>
+                            </div>
+                            <div class="add_to_cart">
+                                {% if m.status != 'None' %}
+                                    <a href="{% url 'home:detail' c.id %}" title="افزودن به سبد">افزودن به سبد</a>
+                                {% else %}
+                                    <a href="{% url 'cart:add_cart' c.id %}" title="افزودن به سبد">افزودن به سبد</a>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </figure>
+                </article>
+            {% endfor %}
+                
+            </div>
+        </section>
+        <!--product area end-->
+    </div>
+</div>
+
+{% endblock body %}

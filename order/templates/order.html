@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block body %}
+
+  <!--breadcrumbs area start-->
+  <div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <ul>
+                        <li><a href="{% url 'home:home' %}">خانه</a></li>
+                        <li>پرداخت</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->
+
+<!--Checkout page section-->
+<div class="checkout_page_bg">
+    <div class="container">
+        <div class="Checkout_section">
+            <div class="row">
+                <div class="col-12">
+                    <!-- <div class="user-actions">
+                        <h3>
+                            <i class="fa fa-file-o" aria-hidden="true"></i>
+                            حساب کاربری دارید؟
+                            <a class="Returning" href="{% url 'accounts:login' %}" data-toggle="collapse" data-target="#checkout_login" aria-expanded="true">وارد حساب خود شوید</a>
+
+                        </h3>
+                        <div id="checkout_login" class="collapse">
+                            <div class="checkout_info">
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
+                                <form action="#">
+                                    <div class="form_group">
+                                        <label>نام کاربری یا ایمیل <span>*</span></label>
+                                        <input type="text" dir="ltr">
+                                    </div>
+                                    <div class="form_group">
+                                        <label>رمز عبور <span>*</span></label>
+                                        <input type="password" dir="ltr">
+                                    </div>
+                                    <div class="form_group group_3 ">
+                                        <button type="submit">ورود</button>
+                                        <label for="remember_box">
+                                            <input id="remember_box" type="checkbox">
+                                            <span> به خاطر سپاری </span>
+                                        </label>
+                                    </div>
+                                    <a href="#">رمز عبور خود را فراموش کرده اید؟</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="user-actions">
+                        <h3>
+                            <i class="fa fa-file-o" aria-hidden="true"></i>
+                            کد تخفیف دارید؟
+                            <a class="Returning" href="#" data-toggle="collapse" data-target="#checkout_coupon" aria-expanded="true">برای وارد کردن کد تخفیف کلیک کنید</a>
+
+                        </h3>
+                        <div id="checkout_coupon" class="collapse">
+                            <div class="checkout_info">
+                                <form action="{% url 'order:coupon' order.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input placeholder="کد تخفیف" type="text" dir="ltr" name="code">
+                                    <button type="submit">اعمال کد تخفیف</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout_form">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_left">
+                            <form action="#">
+                                <h3>جزئیات پرداخت</h3>
+                                <div class="row">
+
+                                    <div class="col-lg-6 mb-20">
+                                        <label>نام <span>*</span></label>
+                                        <input type="text" name="f_name" value="{{order.f_name|default_if_none:''}}">
+                                    </div>
+                                    <div class="col-lg-6 mb-20">
+                                        <label>نام خانوادگی <span>*</span></label>
+                                        <input type="text" name="l_name" value="{{order.l_name|default_if_none:''}}">
+                                    </div>
+                                    <!-- <div class="col-12 mb-20">
+                                        <label>نام شرکت</label>
+                                        <input type="text">
+                                    </div> -->
+                                    <div class="col-12 mb-20">
+                                        <label for="country">کشور <span>*</span></label>
+                                        <select class="niceselect_option" name="cuntry" id="country">
+                                            <option value="2">ایران</option>
+                                            <option value="3">آمریکا</option>
+                                            <option value="4">آلمان</option>
+                                            <option value="5">ترکیه</option>
+                                            <option value="6">ایتالیا</option>
+                                            <option value="7">بحرین</option>
+                                            <option value="8">اسپانیا</option>
+                                            <option value="9">فرانسه</option>
+
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12 mb-20">
+                                        <label>آدرس  <span>*</span></label>
+                                        <input placeholder="نام خیابان و پلاک منزل" type="text" name="address" value="{{order.address|default_if_none:''}}">
+                                    </div>
+                                    <!-- <div class="col-12 mb-20">
+                                        <input placeholder="نام آپارتمان، واحد و ... (اختیاری)" type="text">
+                                    </div>
+                                    <div class="col-12 mb-20">
+                                        <label>شهر / شهرستان <span>*</span></label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="col-12 mb-20">
+                                        <label>استان <span>*</span></label>
+                                        <input type="text">
+                                    </div> -->
+                                    <div class="col-lg-6 mb-20">
+                                        <label>تلفن <span>*</span></label>
+                                        <input type="text" dir="ltr" name="phone" value="{{user.profile.phone|default_if_none:''}}">
+
+                                    </div>
+                                    <div class="col-lg-6 mb-20">
+                                        <label>آدرس ایمیل <span>*</span></label>
+                                        <input type="email" dir="ltr" name="email" value="{{order.email|default_if_none:''}}">
+
+                                    </div>
+                                    <div class="col-12 mb-20">
+                                        <label data-toggle="collapse" data-target="#collapseOne" aria-controls="collapseOne">
+                                            <input type="checkbox"> ساخت حساب کاربری؟
+                                        </label>
+
+                                        <div id="collapseOne" class="collapse one">
+                                            <div class="card-body1">
+                                                <label> رمز عبور <span>*</span></label>
+                                                <input placeholder="رمز عبور" type="password" dir="ltr">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-12 mb-20">
+                                        <label data-toggle="collapse" data-target="#collapsetwo" aria-controls="collapsetwo">
+                                            <input type="checkbox"> ارسال به آدرسی دیگر؟
+                                        </label>
+
+                                        <div id="collapsetwo" class="collapse one">
+                                            <div class="row">
+                                                <div class="col-lg-6 mb-20">
+                                                    <label>نام <span>*</span></label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="col-lg-6 mb-20">
+                                                    <label>نام خانوادگی <span>*</span></label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="col-12 mb-20">
+                                                    <label>نام شرکت</label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="col-12 mb-20">
+                                                    <div class="select_form_select">
+                                                        <label for="countru_name">کشور <span>*</span></label>
+                                                        <select class="niceselect_option" name="cuntry" id="countru_name">
+                                                            <option value="2">ایران</option>
+                                                            <option value="3">آمریکا</option>
+                                                            <option value="4">آلمان</option>
+                                                            <option value="5">ترکیه</option>
+                                                            <option value="6">ایتالیا</option>
+                                                            <option value="7">بحرین</option>
+                                                            <option value="8">اسپانیا</option>
+                                                            <option value="9">فرانسه</option>
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12 mb-20">
+                                                    <label>آدرس خیابان <span>*</span></label>
+                                                    <input placeholder="نام خیابان و پلاک منزل" type="text">
+                                                </div>
+                                                <div class="col-12 mb-20">
+                                                    <input placeholder="نام آپارتمان، واحد و ... (اختیاری)" type="text">
+                                                </div>
+                                                <div class="col-12 mb-20">
+                                                    <label>شهر / شهرستان <span>*</span></label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="col-12 mb-20">
+                                                    <label>استان <span>*</span></label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="col-lg-6 mb-20">
+                                                    <label>تلفن <span>*</span></label>
+                                                    <input type="text" dir="ltr">
+
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label>آدرس ایمیل <span>*</span></label>
+                                                    <input type="email" dir="ltr">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-12">
+                                        <div class="order-notes">
+                                            <label for="order_note">توضیحات سفارش</label>
+                                            <textarea id="order_note" placeholder="یادداشت های مربوط به سفارش، مانند توضیح نحوه ارسال."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_right">
+                                <h3>سفارش شما</h3>
+                                <div class="order_table table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>محصول</th>
+                                                <th>جمع</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for c in cart %}
+                                            {% if c.product.status != 'None' %}
+                                                <tr>
+                                                    <td><span class="d-inline-block">{{c.variant.name}}</span> <strong>× {{c.quantity}}</strong></td>                                                   
+                                                    <td>{% widthratio c.variant.total_price 1 c.quantity %} تومان</td>                
+                                                </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td><span class="d-inline-block">{{c.product.name}}</span> <strong>× {{c.quantity}}</strong></td>                                                   
+                                                <td>{% widthratio c.product.total_price 1 c.quantity %} تومان</td>                
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>جمع سبد</th>
+                                                <td>{{total}} تومان</td>
+                                            </tr>
+                                            <tr>
+                                                <th>حمل و نقل</th>
+                                                <td><strong>رایگان</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>کد تخفیف </th>
+                                                <td><strong> %{{order.discount|default_if_none:'0'}} تخفیف</strong></td>
+                                            </tr>
+                                            <tr class="order_total">
+                                                <th>مجموع سفارش</th>
+                                                <td><strong>{{order.get_price}} تومان</strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="payment_method" id="accordion">
+                                    <div class="panel-default">
+                                        <label data-toggle="collapse" data-target="#method" aria-controls="method">
+                                            <input name="check_method" type="radio" checked> پرداخت نقدی
+                                        </label>
+
+                                        <div id="method" class="collapse show one" data-parent="#accordion">
+                                            <div class="card-body1">
+                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-default">
+                                        <label data-toggle="collapse" data-target="#collapsedefult" aria-controls="collapsedefult">
+                                            <input name="check_method" type="radio"> پرداخت آنلاین <img src="assets/img/icon/papyel.png" alt="">
+                                        </label>
+
+                                        <div id="collapsedefult" class="collapse one" data-parent="#accordion">
+                                            <div class="card-body1">
+                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order_button">
+                                        <form action="{% url 'order:request' order.id order.get_price %}">
+                                        <button type="submit">ادامه پرداخت</button>
+                                        </form>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Checkout page section end-->
+
+
+
+{% endblock body %}

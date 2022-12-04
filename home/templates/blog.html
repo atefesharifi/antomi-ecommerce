@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- {% block script %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block title%}
+{% endblock title%}  -->
+
+{% block body%}
+
+  <!--breadcrumbs area start-->
+  <div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <ul>
+                        <li><a href="{% url 'home:home' %}">خانه</a></li>
+                        <li>بلاگ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->
+
+<div class="blog_bg_area">
+    <div class="container">
+        <!--blog area start-->
+        <div class="row">
+            <div class="col-12">
+                <div class="blog_wrapper blog_nosidebar mb-60">
+                    <div class="blog_header">
+                        <h1>بلاگ</h1>
+                    </div>
+                    <div class="blog_wrapper_inner">
+                        {% for b in page_obj %}
+                        <article class="single_blog">
+                            <figure>
+                                <div class="blog_thumb">
+                                    <a href="blog-details.html"><img src="{{b.image_url}}" alt=""></a>
+                                </div>
+                                <figcaption class="blog_content">
+                                    <h4 class="post_title"><a href="blog-details.html">{{b.title}}</a></h4>
+                                    <div class="blog_meta">
+                                        <span class="author">ارسال توسط : <a href="#">{{b.author}}</a> / </span>
+                                        <span class="meta_date">ارسال شده در :  <a href="#">{{b.created_on}}</a></span>
+                                    </div>
+                                    <div class="blog_desc">
+                                        <p>{{b.content}}</p>
+                                    </div>
+                                    <!-- <footer class="btn_more">
+                                        <a href="blog-details.html"> بیشتر بخوانید</a>
+                                    </footer> -->
+                                </figcaption>
+                            </figure>
+                        </article>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!--blog pagination area start-->
+                <div class="blog_pagination">
+                    <div class="pagination">
+                        <ul>
+                            {% if page_obj.has_previous %}
+                            <li class="">
+                                <a href="?page={{page_obj.previous_page_number}} && {{data}}"><i class="fa fa-angle-double-right"></i></a>
+                            </li>
+                            <!-- <li><a href="?page={{page_obj.previous_page_number}} && {{data}}">قبلی</a></li> -->
+                            {% endif %}
+
+                            {% for i in page_obj.paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="current"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }} && {{data}}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <!-- <li class="{% if page_num == page_obj.number %} current {% endif %}">{{page_obj.number}}</li> -->
+                            
+                            {% if page_obj.has_next %}
+                            <!-- <li class="next"><a href="?page={{page_obj.next_page_number}} && {{data}}">بعدی</a></li> -->
+                            <li><a href="?page={{page_obj.next_page_number}} && {{data}}"><i class="fa fa-angle-double-left"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <!--blog pagination area end-->
+            </div>
+        </div>
+        <!--blog area end-->
+    </div>
+</div>
+
+{% endblock body%}

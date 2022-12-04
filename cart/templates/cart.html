@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block body %}
+
+      <!--breadcrumbs area start-->
+      <div class="breadcrumbs_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb_content">
+                        <ul>
+                            <li><a href="{% url 'home:home' %}">خانه</a></li>
+                            <li>سبد خرید</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--breadcrumbs area end-->
+
+    <!--shopping cart area start -->
+    <div class="cart_page_bg">
+        <div class="container">
+            <div class="shopping_cart_area">
+                
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table_desc">
+                                <div class="cart_page table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="product_remove">حذف</th>
+                                                <th class="product_thumb">تصویر</th>
+                                                <th class="product_name">محصول</th>
+                                                <th class="product_name">رنگ</th>
+                                                <th class="product_name">سایز</th>
+                                                <th class="product-price">قیمت</th>
+                                                <th class="product_quantity">تعداد</th>
+                                                <th class="product_total">جمع</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for c in cart %} 
+                                        <tr>
+
+                                        {% if c.product.status != 'None' %}
+
+                                                <td class="product_remove"><a href="{% url 'cart:remove_cart' c.product.id  %}"><i class="fa fa-trash-o"></i></button></a></td>
+                                                <td class="product_thumb"><a href="#"><img style="width:100px ;height:100px;padding:10px;" src="{{c.product.image_url}}" alt=""></a></td>
+                                                <td class="product_name"><a href="{% url 'home:detail' c.product.id %}">{{c.variant.name}}</a></td>
+                                                <td class="product_name">{{c.variant.color_variant|default_if_none:'-'}}</td>
+                                                <td class="product_name">{{c.variant.size_variant|default_if_none:'-'}}</td>
+                                                <td class="product-price">{{c.variant.total_price | intcomma}} تومان</td>
+                                                <td class="product_quantity">
+                                                    <!-- <label>تعداد</label> <input min="1" max="{{c.variant.amount}}" value="{{c.quantity}}" type="number"> -->
+                                                    <a style="padding: 15px;" href="{% url 'cart:remove_single' c.id %}"><i class="fa fa-minus"></i></a>
+                                                    {{ c.quantity }}
+                                                    <a style="padding: 15px;" href="{% url 'cart:add_single' c.id %}"><i class="fa fa-plus"></i></a>
+                                                     
+                                                </td>
+                                                <td class="product_total">{% widthratio c.variant.total_price 1 c.quantity %} تومان</td>
+                                            
+                                                {% else %}
+                                            
+                                                <td class="product_remove"><a href="{% url 'cart:remove_cart' c.product.id %}"><i class="fa fa-trash-o"></i></button></a></td>
+                                                <td class="product_thumb"><a href="#"><img style="width:100px ;height:100px;padding:10px;" src="{{c.product.image_url}}" alt=""></a></td>
+                                                <td class="product_name"><a href="{% url 'home:detail' c.product.id %}">{{c.product.name}}</a></td>
+                                                <td class="product_name">{{'-'}}</td>
+                                                <td class="product_name">{{'-'}}</td>
+                                                <td class="product-price">{{c.product.unit_price | intcomma}} تومان</td>
+                                                <td class="product_quantity">
+                                                    <!-- <label>تعداد</label> <input min="1" max="{{c.variant.amount}}" value="{{c.quantity}}" type="number"> -->
+                                                    <a style="padding: 15px;" href="{% url 'cart:remove_single' c.id %}"><i class="fa fa-minus"></i></a>
+                                                    {{ c.quantity }}
+                                                    <a style="padding: 15px;" href="{% url 'cart:add_single' c.id %}"><i class="fa fa-plus"></i></a>                                                     
+                                                </td>
+                                                <td class="product_total">{% widthratio c.product.total_price 1 c.quantity %} تومان</td>
+                                            
+                                            {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- <div class="cart_submit">
+                                    <button type="submit">به روز رسانی سبد</button>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!--coupon code area start-->
+                    <div class="coupon_area">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <!-- <div class="coupon_code left">
+                                    <h3>کد تخفیف</h3>
+                                    <div class="coupon_inner">
+                                        <p>کد تخفیف خود را در صورت وجود وارد نمایید</p>
+                                        <input placeholder="کد تخفیف" type="text">
+                                        <button type="submit">اعمال کد تخفیف</button>
+                                    </div>
+                                </div> -->
+
+                                <div class="coupon_code left">
+                                    <h3>اطلاعات مشتری </h3>
+                                    <div class="coupon_inner">
+                                        <form action="{% url 'order:order_create' %}" method="POST">
+                                            {% csrf_token %}
+
+                                            <div class="cart_subtotal">
+                                                <p>ایمیل </p>
+                                                <p class="cart_amount"><input style="margin-left: 5px;width:500px;direction:ltr;" placeholder="ایمیل" type="email" name="email" value="{{user.email|default_if_none:''}}"></p>
+                                            </div>
+
+                                            <div class="cart_subtotal">
+                                                <p>نام </p>
+                                                <p class="cart_amount"><input style="margin-left: 5px;width:500px;" placeholder="نام" type="text" name="f_name" value="{{user.first_name|default_if_none:''}}"></p>
+                                            </div>
+                                            <div class="cart_subtotal">
+                                                <p>نام خانوادگی </p>
+                                                <p class="cart_amount"><input style="margin-left: 5px;width:500px;" placeholder="نام خانوادگی" type="text" name="l_name" value="{{user.last_name|default_if_none:''}}"></p>
+                                            </div>
+                                            <div class="cart_subtotal">
+                                                <p>آدرس </p>
+                                                <p class="cart_amount"><input style="margin-left: 5px;width:500px;" placeholder="..." type="text" name="address" value="{{user.profile.address|default_if_none:''}}"></p>
+                                            </div>
+                    
+                                            <div class="checkout_btn">
+                                                <button type="submit">پرداخت</button>            
+                                            </div>
+                                        </form>
+                                        
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="coupon_code right">
+                                    <h3>مجموع سبد</h3>
+                                    <div class="coupon_inner">
+                                        <div class="cart_subtotal">
+                                            <p>جمع جزء</p>
+                                            <p class="cart_amount">{{total}} تومان</p>
+                                        </div>
+                                        <div class="cart_subtotal">
+                                            <p>حمل و نقل</p>
+                                            <p class="cart_amount">رایگان</p>
+                                        </div>
+                                        <a href="#">محاسبه هزینه</a>
+
+                                        <div class="cart_subtotal has-border">
+                                            <p>جمع</p>
+                                            <p class="cart_amount">{{total}} تومان</p>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--coupon code area end-->
+                
+            </div>
+        </div>
+    </div>
+    <!--shopping cart area end -->
+
+{% endblock body %}

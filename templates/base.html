@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="no-js" lang="fa" dir="rtl">
+
+
+{% load static %}
+
+<head>
+  <meta charset="utf-8">
+  <!-- <meta http-equiv="x-ua-compatible" content="ie=edge"> -->
+  <title>قالب Antomi | قالب فروشگاهی آنتومی</title>
+  <!-- <meta name="description" content=""> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+
+<meta name="theme-color" content="#c40316">
+
+  <!-- CSS 
+  ========================= -->
+
+
+  <!-- Plugins CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/plugins.css' %}">
+
+  <!-- Main Style CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+ 
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Font Awesome -->
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous"> -->
+    <!-- Customized Bootstrap Stylesheet -->
+
+
+</head>
+<body>
+    
+    {% include 'navbar.html' %}
+    {% include 'message.html' %}
+    {% block body%}
+    {% endblock body%}
+    
+<!-- JS
+============================================ -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <!--map js code here-->
+	<script src="https://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.22&key=AIzaSyAEn4c_T1rFt7ltf_oNavnjND8dDPm4KQs&language=fa"></script>
+  <script src="https://www.google.com/jsapi"></script>
+  <script src="{% static 'js/map.js' %}"></script>
+
+
+  <!-- Plugins JS -->
+  <script src="{% static 'js/plugins.js' %}"></script>
+
+  <!-- Main JS -->
+  <script src="{% static 'js/main.js' %}"></script>
+
+    {% block script %}{% endblock %}
+
+    {% include 'footer.html' %}
+</body>
+</html>
+
